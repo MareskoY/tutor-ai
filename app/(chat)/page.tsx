@@ -1,3 +1,4 @@
+// app/(chat)/page.tsx
 import { cookies } from 'next/headers';
 
 import { Chat } from '@/components/chat';
@@ -10,6 +11,7 @@ export default async function Page() {
 
   const cookieStore = await cookies();
   const modelIdFromCookie = cookieStore.get('model-id')?.value;
+  const defaultChatType = 'default';
 
   const selectedModelId =
     models.find((model) => model.id === modelIdFromCookie)?.id ||
@@ -24,6 +26,7 @@ export default async function Page() {
         selectedModelId={selectedModelId}
         selectedVisibilityType="private"
         isReadonly={false}
+        defaultChatType={defaultChatType}
       />
       <DataStreamHandler id={id} />
     </>

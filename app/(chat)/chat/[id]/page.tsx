@@ -1,3 +1,4 @@
+// app/(chat)/chat/[id]/page.tsx
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
@@ -47,6 +48,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         selectedModelId={selectedModelId}
         selectedVisibilityType={chat.visibility}
         isReadonly={session?.user?.id !== chat.userId}
+        defaultChatType={chat.type || 'default'}
       />
       <DataStreamHandler id={id} />
     </>
