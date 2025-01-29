@@ -9,7 +9,7 @@ import {
 import { auth } from '@/app/(auth)/auth';
 import { customModel } from '@/lib/ai';
 import { models } from '@/lib/ai/models';
-import {buildSystemPrompt, systemPrompt} from '@/lib/ai/prompts';
+import { buildSystemPrompt, systemPrompt } from '@/lib/ai/prompts';
 import {
   deleteChatById,
   getChatById,
@@ -27,7 +27,7 @@ import { createDocument } from '@/lib/ai/tools/create-document';
 import { updateDocument } from '@/lib/ai/tools/update-document';
 import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
 import { getWeather } from '@/lib/ai/tools/get-weather';
-import {ChatType} from "@/lib/ai/chat-type";
+import type { ChatType } from '@/lib/ai/chat-type';
 
 export const maxDuration = 60;
 
@@ -52,10 +52,14 @@ export async function POST(request: Request) {
     messages,
     modelId,
     chatType = 'default',
-  }: { id: string; messages: Array<Message>; modelId: string,  chatType?: ChatType;  } =
-    await request.json();
+  }: {
+    id: string;
+    messages: Array<Message>;
+    modelId: string;
+    chatType?: ChatType;
+  } = await request.json();
 
-  console.log("chatType", chatType)
+  console.log('chatType', chatType);
 
   const session = await auth();
 
@@ -77,13 +81,13 @@ export async function POST(request: Request) {
   }
 
   const chat = await getChatById({ id });
-  let type = chatType
+  let type = chatType;
 
   if (!chat) {
     const title = await generateTitleFromUserMessage({ message: userMessage });
-    await saveChat({ id, userId: session.user.id, title, type: chatType, });
+    await saveChat({ id, userId: session.user.id, title, type: chatType });
   } else {
-    type = chat.type || 'default'
+    type = chat.type || 'default';
   }
 
   const userMessageId = generateUUID();
@@ -94,12 +98,12 @@ export async function POST(request: Request) {
     ],
   });
 
-  let prompt
+  let prompt: string;
 
-  if(type){
-     prompt = buildSystemPrompt(type);
-  }else{
-     prompt = systemPrompt;
+  if (type) {
+    prompt = buildSystemPrompt(type);
+  } else {
+    prompt = systemPrompt;
   }
 
   return createDataStreamResponse({

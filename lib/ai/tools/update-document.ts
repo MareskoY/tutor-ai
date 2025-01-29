@@ -1,13 +1,13 @@
 import {
-  DataStreamWriter,
+  type DataStreamWriter,
   experimental_generateImage,
   smoothStream,
   streamObject,
   streamText,
   tool,
 } from 'ai';
-import { Model } from '../models';
-import { Session } from 'next-auth';
+import type { Model } from '../models';
+import type { Session } from 'next-auth';
 import { z } from 'zod';
 import { getDocumentById, saveDocument } from '@/lib/db/queries';
 import { customModel, imageGenerationModel } from '..';

@@ -1,5 +1,5 @@
-import { BlockKind } from '@/components/block';
-import {ChatType, chatTypeConfig} from "@/lib/ai/chat-type";
+import type { BlockKind } from '@/components/block';
+import { type ChatType, chatTypeConfig } from '@/lib/ai/chat-type';
 
 export const blocksPrompt = `
 Blocks is a special user interface mode that helps users with writing, editing, and other content creation tasks. When block is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the blocks and visible to the user.
@@ -83,11 +83,9 @@ ${currentContent}
 `
       : '';
 
-
 export function buildSystemPrompt(chatType: ChatType) {
-    // Доменный промпт для конкретного типа
-    const typePrompt = chatTypeConfig[chatType]?.prompt ?? '';
+  // Доменный промпт для конкретного типа
+  const typePrompt = chatTypeConfig[chatType]?.prompt ?? '';
 
-    return `${regularPrompt}\n\n${typePrompt}`;
+  return `${regularPrompt}\n\n${typePrompt}`;
 }
-

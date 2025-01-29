@@ -1,6 +1,6 @@
 import { generateUUID } from '@/lib/utils';
 import {
-  DataStreamWriter,
+  type DataStreamWriter,
   experimental_generateImage,
   smoothStream,
   streamObject,
@@ -11,8 +11,8 @@ import { z } from 'zod';
 import { customModel, imageGenerationModel } from '..';
 import { codePrompt } from '../prompts';
 import { saveDocument } from '@/lib/db/queries';
-import { Session } from 'next-auth';
-import { Model } from '../models';
+import type { Session } from 'next-auth';
+import type { Model } from '../models';
 
 interface CreateDocumentProps {
   model: Model;

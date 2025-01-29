@@ -16,8 +16,8 @@ import {
   message,
   vote,
 } from './schema';
-import { BlockKind } from '@/components/block';
-import {ChatType} from "@/lib/ai/chat-type";
+import type { BlockKind } from '@/components/block';
+import type { ChatType } from '@/lib/ai/chat-type';
 
 // Optionally, if not using email/pass login, you can
 // use the Drizzle adapter for Auth.js / NextAuth
@@ -49,11 +49,11 @@ export async function createUser(email: string, password: string) {
 }
 
 export async function saveChat({
-                                 id,
-                                 userId,
-                                 title,
-                                 type,
-                               }: {
+  id,
+  userId,
+  title,
+  type,
+}: {
   id: string;
   userId: string;
   title: string;

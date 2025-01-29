@@ -12,9 +12,9 @@ import { fetcher } from '@/lib/utils';
 import { Block } from './block';
 import { MultimodalInput } from './multimodal-input';
 import { Messages } from './messages';
-import { VisibilityType } from './visibility-selector';
+import type { VisibilityType } from './visibility-selector';
 import { useBlockSelector } from '@/hooks/use-block';
-import {ChatType} from "@/lib/ai/chat-type";
+import type { ChatType } from '@/lib/ai/chat-type';
 
 export function Chat({
   id,
@@ -22,7 +22,7 @@ export function Chat({
   selectedModelId,
   selectedVisibilityType,
   isReadonly,
-                       defaultChatType,
+  defaultChatType,
 }: {
   id: string;
   initialMessages: Array<Message>;
@@ -33,7 +33,9 @@ export function Chat({
 }) {
   const { mutate } = useSWRConfig();
 
-  const [chatType, setChatType] = useState<ChatType>(defaultChatType || 'default');
+  const [chatType, setChatType] = useState<ChatType>(
+    defaultChatType || 'default',
+  );
 
   const {
     messages,
