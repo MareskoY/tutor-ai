@@ -49,6 +49,7 @@ import {
 import type { Chat } from '@/lib/db/schema';
 import { fetcher } from '@/lib/utils';
 import { useChatVisibility } from '@/hooks/use-chat-visibility';
+import {iconMap} from "@/components/chat-type-icons";
 
 type GroupedChats = {
   today: Chat[];
@@ -74,10 +75,13 @@ const PureChatItem = ({
     initialVisibility: chat.visibility,
   });
 
+  const icon = iconMap[chat.type || 'default'] ?? null;
+  console.log("chat.type", chat.type)
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild isActive={isActive}>
         <Link href={`/chat/${chat.id}`} onClick={() => setOpenMobile(false)}>
+          {icon}
           <span>{chat.title}</span>
         </Link>
       </SidebarMenuButton>

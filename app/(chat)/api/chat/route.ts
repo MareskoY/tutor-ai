@@ -9,7 +9,7 @@ import {
 import { auth } from '@/app/(auth)/auth';
 import { customModel } from '@/lib/ai';
 import { models } from '@/lib/ai/models';
-import { systemPrompt } from '@/lib/ai/prompts';
+import {buildSystemPrompt, systemPrompt} from '@/lib/ai/prompts';
 import {
   deleteChatById,
   getChatById,
@@ -27,6 +27,7 @@ import { createDocument } from '@/lib/ai/tools/create-document';
 import { updateDocument } from '@/lib/ai/tools/update-document';
 import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
 import { getWeather } from '@/lib/ai/tools/get-weather';
+import {ChatType} from "@/lib/ai/chat-type";
 
 export const maxDuration = 60;
 
@@ -50,8 +51,11 @@ export async function POST(request: Request) {
     id,
     messages,
     modelId,
-  }: { id: string; messages: Array<Message>; modelId: string } =
+    chatType = 'default',
+  }: { id: string; messages: Array<Message>; modelId: string,  chatType?: ChatType;  } =
     await request.json();
+
+  console.log("chatType", chatType)
 
   const session = await auth();
 
@@ -73,10 +77,13 @@ export async function POST(request: Request) {
   }
 
   const chat = await getChatById({ id });
+  let type = chatType
 
   if (!chat) {
     const title = await generateTitleFromUserMessage({ message: userMessage });
-    await saveChat({ id, userId: session.user.id, title });
+    await saveChat({ id, userId: session.user.id, title, type: chatType, });
+  } else {
+    type = chat.type || 'default'
   }
 
   const userMessageId = generateUUID();
@@ -87,6 +94,14 @@ export async function POST(request: Request) {
     ],
   });
 
+  let prompt
+
+  if(type){
+     prompt = buildSystemPrompt(type);
+  }else{
+     prompt = systemPrompt;
+  }
+
   return createDataStreamResponse({
     execute: (dataStream) => {
       dataStream.writeData({
@@ -96,7 +111,7 @@ export async function POST(request: Request) {
 
       const result = streamText({
         model: customModel(model.apiIdentifier),
-        system: systemPrompt,
+        system: prompt,
         messages: coreMessages,
         maxSteps: 5,
         experimental_activeTools: allTools,

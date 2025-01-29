@@ -10,6 +10,7 @@ import {
   foreignKey,
   boolean,
 } from 'drizzle-orm/pg-core';
+import {CHAT_TYPES} from "@/lib/ai/chat-type";
 
 export const user = pgTable('User', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
@@ -29,6 +30,9 @@ export const chat = pgTable('Chat', {
   visibility: varchar('visibility', { enum: ['public', 'private'] })
     .notNull()
     .default('private'),
+    type: varchar('type', {
+        enum: CHAT_TYPES,
+    })
 });
 
 export type Chat = InferSelectModel<typeof chat>;

@@ -49,18 +49,18 @@ export default async function RootLayout({
       // https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
       suppressHydrationWarning
     >
-      <head>
-        <script
+    <head>
+      <script
           dangerouslySetInnerHTML={{
             __html: THEME_COLOR_SCRIPT,
           }}
-        />
-      </head>
-      <body className="antialiased">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
+      />
+    </head>
+    <body className="antialiased">
+    <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
           disableTransitionOnChange
         >
           <Toaster position="top-center" />
