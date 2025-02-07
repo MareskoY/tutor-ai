@@ -1,3 +1,4 @@
+// components/block-messages.tsx
 import { PreviewMessage } from './message';
 import { useScrollToBottom } from './use-scroll-to-bottom';
 import type { Vote } from '@/lib/db/schema';

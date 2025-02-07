@@ -1,3 +1,4 @@
+// components/message.tsx
 'use client';
 
 import type { ChatRequestOptions, Message } from 'ai';
@@ -19,6 +20,8 @@ import { Button } from './ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { MessageEditor } from './message-editor';
 import { DocumentPreview } from './document-preview';
+import {useCallBlock} from "@/hooks/use-call-block";
+import {useCallBlockContext} from "@/components/context/call-block-context";
 
 const PurePreviewMessage = ({
   chatId,
@@ -42,6 +45,48 @@ const PurePreviewMessage = ({
   isReadonly: boolean;
 }) => {
   const [mode, setMode] = useState<'view' | 'edit'>('view');
+  const { openExistingCall } = useCallBlockContext();
+
+  // @ts-ignore
+  if (message.role === 'call') {
+    let callData = (message as any).callData || message.content;
+    if (typeof callData === 'string') {
+      try {
+        callData = JSON.parse(callData);
+      } catch (error) {
+        console.error('Ошибка парсинга callData:', error);
+        // Можно вернуть альтернативный UI или null
+        return null;
+      }
+    }
+    return (
+      <AnimatePresence>
+        <motion.div
+          className="w-full mx-auto max-w-3xl px-4 group/message"
+          initial={{ y: 5, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          {/* Стилизуем блок как сообщение от пользователя */}
+          <div className="flex gap-4 w-full justify-end">
+            <div
+              className="bg-blue-100 text-blue-800 p-4 rounded-lg border border-blue-300 cursor-pointer"
+              onClick={() => openExistingCall(message.id)}
+            >
+              <div className="font-bold">Voice Call</div>
+              <div>Duration: {callData.result.duration} sec</div>
+              {callData.result.transcript &&
+                callData.result.transcript.length > 0 && (
+                  <div className="mt-2 text-sm text-gray-600">
+                    Transcript: {callData?.result?.transcript}
+                  </div>
+                )}
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    );
+  }
 
   return (
     <AnimatePresence>

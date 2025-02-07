@@ -1,3 +1,4 @@
+// components/chat-header.tsx
 'use client';
 
 import Link from 'next/link';
@@ -7,11 +8,12 @@ import { useWindowSize } from 'usehooks-ts';
 import { ModelSelector } from '@/components/model-selector';
 import { SidebarToggle } from '@/components/sidebar-toggle';
 import { Button } from '@/components/ui/button';
-import { PlusIcon, VercelIcon } from './icons';
+import { BotIcon, PlusIcon, VercelIcon } from './icons';
 import { useSidebar } from './ui/sidebar';
 import { memo } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { type VisibilityType, VisibilitySelector } from './visibility-selector';
+import {useCallBlockContext} from "@/components/context/call-block-context";
 
 function PureChatHeader({
   chatId,
@@ -26,8 +28,11 @@ function PureChatHeader({
 }) {
   const router = useRouter();
   const { open } = useSidebar();
+  const { openNewCall } = useCallBlockContext();
 
   const { width: windowWidth } = useWindowSize();
+
+  console.log('chatId-header', chatId);
 
   return (
     <header className="flex sticky top-0 bg-background py-1.5 items-center px-2 md:px-2 gap-2">
@@ -52,12 +57,12 @@ function PureChatHeader({
         </Tooltip>
       )}
 
-      {!isReadonly && (
-        <ModelSelector
-          selectedModelId={selectedModelId}
-          className="order-1 md:order-2"
-        />
-      )}
+      {/*{!isReadonly && (*/}
+      {/*  <ModelSelector*/}
+      {/*    selectedModelId={selectedModelId}*/}
+      {/*    className="order-1 md:order-2"*/}
+      {/*  />*/}
+      {/*)}*/}
 
       {!isReadonly && (
         <VisibilitySelector
@@ -79,6 +84,20 @@ function PureChatHeader({
           Deploy with Vercel
         </Link>
       </Button>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="outline"
+            className="order-5 md:h-fit px-2"
+            onClick={() => openNewCall()}
+          >
+            <BotIcon />
+            <span className="md:sr-only">Call</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Call</TooltipContent>
+      </Tooltip>
     </header>
   );
 }

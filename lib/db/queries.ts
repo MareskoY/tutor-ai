@@ -1,3 +1,4 @@
+// lib/db/queries.ts
 import 'server-only';
 
 import { genSaltSync, hashSync } from 'bcrypt-ts';
@@ -13,8 +14,10 @@ import {
   type Suggestion,
   suggestion,
   type Message,
-  message,
+  message as messageTable,
   vote,
+  callTranscription,
+  CallTranscription,
 } from './schema';
 import type { BlockKind } from '@/components/block';
 import type { ChatType } from '@/lib/ai/chat-type';
@@ -76,7 +79,7 @@ export async function saveChat({
 export async function deleteChatById({ id }: { id: string }) {
   try {
     await db.delete(vote).where(eq(vote.chatId, id));
-    await db.delete(message).where(eq(message.chatId, id));
+    await db.delete(messageTable).where(eq(messageTable.chatId, id));
 
     return await db.delete(chat).where(eq(chat.id, id));
   } catch (error) {
@@ -110,7 +113,7 @@ export async function getChatById({ id }: { id: string }) {
 
 export async function saveMessages({ messages }: { messages: Array<Message> }) {
   try {
-    return await db.insert(message).values(messages);
+    return await db.insert(messageTable).values(messages);
   } catch (error) {
     console.error('Failed to save messages in database', error);
     throw error;
@@ -121,9 +124,9 @@ export async function getMessagesByChatId({ id }: { id: string }) {
   try {
     return await db
       .select()
-      .from(message)
-      .where(eq(message.chatId, id))
-      .orderBy(asc(message.createdAt));
+      .from(messageTable)
+      .where(eq(messageTable.chatId, id))
+      .orderBy(asc(messageTable.createdAt));
   } catch (error) {
     console.error('Failed to get messages by chat id from database', error);
     throw error;
@@ -290,7 +293,7 @@ export async function getSuggestionsByDocumentId({
 
 export async function getMessageById({ id }: { id: string }) {
   try {
-    return await db.select().from(message).where(eq(message.id, id));
+    return await db.select().from(messageTable).where(eq(messageTable.id, id));
   } catch (error) {
     console.error('Failed to get message by id from database');
     throw error;
@@ -306,9 +309,12 @@ export async function deleteMessagesByChatIdAfterTimestamp({
 }) {
   try {
     return await db
-      .delete(message)
+      .delete(messageTable)
       .where(
-        and(eq(message.chatId, chatId), gte(message.createdAt, timestamp)),
+        and(
+          eq(messageTable.chatId, chatId),
+          gte(messageTable.createdAt, timestamp),
+        ),
       );
   } catch (error) {
     console.error(
@@ -329,6 +335,59 @@ export async function updateChatVisiblityById({
     return await db.update(chat).set({ visibility }).where(eq(chat.id, chatId));
   } catch (error) {
     console.error('Failed to update chat visibility in database');
+    throw error;
+  }
+}
+
+export async function saveMessage({ message }: { message: Message }) {
+  try {
+    return await db.insert(messageTable).values(message);
+  } catch (error) {
+    console.error('Failed to save message in database', error);
+    throw error;
+  }
+}
+
+// Функция для обновления одного сообщения (например, обновляем длительность звонка)
+export async function updateMessage({
+  id,
+  content,
+}: {
+  id: string;
+  content: any;
+}) {
+  try {
+    return await db
+      .update(messageTable)
+      .set({ content })
+      .where(eq(messageTable.id, id));
+  } catch (error) {
+    console.error('Failed to update message in database', error);
+    throw error;
+  }
+}
+
+export async function saveCallTranscriptions({
+  transcriptions,
+}: {
+  transcriptions: Array<CallTranscription>;
+}) {
+  try {
+    return await db.insert(callTranscription).values(transcriptions);
+  } catch (error) {
+    console.error('Failed to save call transcriptions in database', error);
+    throw error;
+  }
+}
+
+export async function getCallTranscriptionsByCallId(callMessageId: string) {
+  try {
+    return await db.select()
+        .from(callTranscription)
+        .where(eq(callTranscription.callMessageId, callMessageId))
+        .orderBy(asc(callTranscription.createdAt));
+  } catch (error) {
+    console.error('Failed to get call transcriptions from database', error);
     throw error;
   }
 }

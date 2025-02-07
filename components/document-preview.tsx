@@ -1,3 +1,4 @@
+// components/document-preview.tsx
 'use client';
 
 import {

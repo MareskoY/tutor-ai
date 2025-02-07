@@ -95,6 +95,19 @@ export function convertToUIMessages(
       });
     }
 
+    if (message.role === 'call') {
+      chatMessages.push({
+        id: message.id,
+        role: message.role as Message['role'],
+        // Можно оставить content пустым или задать специальный текст:
+        content: '',
+        // Дополнительное свойство для звонка:
+        callData: message.content, // здесь content – объект с данными звонка
+        toolInvocations: [],
+      } as Message & { callData: any });
+      return chatMessages;
+    }
+
     let textContent = '';
     const toolInvocations: Array<ToolInvocation> = [];
 
@@ -104,7 +117,7 @@ export function convertToUIMessages(
       for (const content of message.content) {
         if (content.type === 'text') {
           textContent += content.text;
-        } else if (content.type === 'tool-call') {
+        } else if (content.type === 'tool-message') {
           toolInvocations.push({
             state: 'call',
             toolCallId: content.toolCallId,
@@ -147,7 +160,7 @@ export function sanitizeResponseMessages(
     if (typeof message.content === 'string') return message;
 
     const sanitizedContent = message.content.filter((content) =>
-      content.type === 'tool-call'
+      content.type === 'tool-message'
         ? toolResultIds.includes(content.toolCallId)
         : content.type === 'text'
           ? content.text.length > 0

@@ -1,3 +1,4 @@
+// app/(chat)/api/chat/route.ts
 import {
   type Message,
   convertToCoreMessages,
@@ -59,8 +60,6 @@ export async function POST(request: Request) {
     chatType?: ChatType;
   } = await request.json();
 
-  console.log('chatType', chatType);
-
   const session = await auth();
 
   if (!session || !session.user || !session.user.id) {
@@ -73,7 +72,11 @@ export async function POST(request: Request) {
     return new Response('Model not found', { status: 404 });
   }
 
-  const coreMessages = convertToCoreMessages(messages);
+  // exclude calls
+  // @ts-ignore
+  const filteredMessages = messages.filter((msg) => msg.role !== 'call');
+
+  const coreMessages = convertToCoreMessages(filteredMessages);
   const userMessage = getMostRecentUserMessage(coreMessages);
 
   if (!userMessage) {

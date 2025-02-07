@@ -1,3 +1,4 @@
+// lib/ai/tools/create-document.ts
 import { generateUUID } from '@/lib/utils';
 import {
   type DataStreamWriter,
@@ -27,7 +28,7 @@ export const createDocument = ({
 }: CreateDocumentProps) =>
   tool({
     description:
-      'Create a document for a writing or content creation activities like image generation. This tool will call other functions that will generate the contents of the document based on the title and kind.',
+      'Create a document for a writing or content creation activities like image generation. This tool will message other functions that will generate the contents of the document based on the title and kind.',
     parameters: z.object({
       title: z.string(),
       kind: z.enum(['text', 'code', 'image']),

@@ -43,6 +43,13 @@
       "when": 1738157666548,
       "tag": "0005_add_chat_type",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1738717142644,
+      "tag": "0006_add_calltranscription_table",
+      "breakpoints": true
     }
   ]
 }
