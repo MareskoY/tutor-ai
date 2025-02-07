@@ -1,5 +1,5 @@
 // app/api/message/message/route.ts
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { auth } from '@/app/(auth)/auth';
 import { generateUUID } from '@/lib/utils';
 import {
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     }
 
     // Проверяем наличие чата
-    let chat = await getChatById({ id });
+    const chat = await getChatById({ id });
 
     let type = chatType;
     if (!chat) {

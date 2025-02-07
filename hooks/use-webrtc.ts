@@ -3,18 +3,21 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { Conversation } from '@/lib/ai/realtime/conversations';
-import { Message } from 'ai';
+import type { Conversation } from '@/lib/ai/realtime/conversations';
+import type { Message } from 'ai';
 import useSound from 'use-sound';
 const ringSound= '/sounds/start_call.mp3';
 const failSound= '/sounds/end_call.mp3';
 const endSound = '/sounds/end_call.mp3';
+
+type ToolCallback = (...args: any[]) => any;
 
 export interface Tool {
   name: string;
   description: string;
   parameters?: Record<string, any>;
 }
+
 
 /**
  * The return type for the hook, matching Approach A
@@ -29,7 +32,7 @@ interface UseWebRTCAudioSessionReturn {
   startSession: () => Promise<void>;
   stopSession: () => void;
   handleStartStopClick: () => void;
-  registerFunction: (name: string, fn: Function) => void;
+  registerFunction: (name: string, fn: ToolCallback) => void;
   msgs: any[];
   currentVolume: number;
   conversation: Conversation[];
@@ -68,7 +71,7 @@ export default function useWebRTCAudioSession(
   const [conversation, setConversation] = useState<Conversation[]>([]);
 
   // For function calls (AI "tools")
-  const functionRegistry = useRef<Record<string, Function>>({});
+  const functionRegistry = useRef<Record<string, ToolCallback>>({});
 
   // Volume analysis (assistant inbound audio)
   const [currentVolume, setCurrentVolume] = useState(0);
@@ -104,9 +107,10 @@ export default function useWebRTCAudioSession(
   /**
    * Register a function (tool) so the AI can message it.
    */
-  function registerFunction(name: string, fn: Function) {
+  function registerFunction(name: string, fn: ToolCallback) {
     functionRegistry.current[name] = fn;
   }
+
 
   /**
    * Configure the data channel on open, sending a session update to the server.
@@ -428,7 +432,7 @@ export default function useWebRTCAudioSession(
       role: 'call',
       content: {
         messageType: 'call',
-        toolCallId: 'call_' + uuidv4(),
+        toolCallId: `call_${uuidv4()}`,
         toolName: 'voiceCall',
         result: {
           duration: 0,

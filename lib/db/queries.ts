@@ -17,7 +17,7 @@ import {
   message as messageTable,
   vote,
   callTranscription,
-  CallTranscription,
+  type CallTranscription,
 } from './schema';
 import type { BlockKind } from '@/components/block';
 import type { ChatType } from '@/lib/ai/chat-type';

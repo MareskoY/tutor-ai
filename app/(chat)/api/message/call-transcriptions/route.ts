@@ -1,5 +1,5 @@
 // app/(chat)/api/message/call-transcriptions/route.ts
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import {getCallTranscriptionsByCallId, saveCallTranscriptions} from '@/lib/db/queries';
 
 

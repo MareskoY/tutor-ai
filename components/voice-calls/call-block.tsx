@@ -2,12 +2,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { XIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useScrollToBottom } from '@/components/use-scroll-to-bottom';
 import {useCallBlockContext} from "@/components/context/call-block-context";
+import {CrossIcon} from "@/components/icons";
 
 
 interface CallBlockProps {
@@ -107,17 +107,21 @@ console.log("isConnecting", isConnecting)
         >
           {/* Кнопка закрытия */}
           {(!isSessionActive && !isConnecting) &&
-            <button
+            <Button
+                variant={"ghost"}
+                size={"icon"}
                 onClick={onClose}
-                className="absolute top-4 right-4 z-50 text-white hover:text-gray-300"
+                className="absolute top-4 right-4 z-50 text-white hover:text-gray-300 rounded-full "
             >
-              <XIcon className="w-8 h-8" />
-            </button>
+              <CrossIcon  />
+            </Button>
           }
 
           <div className="w-full h-full flex flex-col">
             {/* Мобильная панель транскрипций */}
             <div
+                role="button"
+                tabIndex={0}
                 className={`block md:hidden p-4 transition-all duration-300 mt-[60px] scrollbar-hide  ${
                     mobileExpanded
                         ? 'h-[50vh] overflow-y-auto '
