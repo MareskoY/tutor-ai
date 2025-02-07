@@ -160,7 +160,7 @@ export function sanitizeResponseMessages(
     if (typeof message.content === 'string') return message;
 
     const sanitizedContent = message.content.filter((content) =>
-      content.type === 'tool-message'
+      content.type === 'tool-call'
         ? toolResultIds.includes(content.toolCallId)
         : content.type === 'text'
           ? content.text.length > 0
