@@ -20,7 +20,7 @@ import { Button } from './ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { MessageEditor } from './message-editor';
 import { DocumentPreview } from './document-preview';
-import {useCallBlockContext} from "@/components/context/call-block-context";
+import { useCallBlockContext } from '@/components/context/call-block-context';
 
 const PurePreviewMessage = ({
   chatId,
@@ -69,8 +69,8 @@ const PurePreviewMessage = ({
           {/* Стилизуем блок как сообщение от пользователя */}
           <div className="flex gap-4 w-full justify-end">
             <div
-                role="button"
-                tabIndex={0}
+              role="button"
+              tabIndex={0}
               className="bg-blue-100 text-blue-800 p-4 rounded-lg border border-blue-300 cursor-pointer"
               onClick={() => openExistingCall(message.id)}
             >

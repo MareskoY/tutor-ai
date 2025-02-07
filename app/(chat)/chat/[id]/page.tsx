@@ -8,7 +8,7 @@ import { DEFAULT_MODEL_NAME, models } from '@/lib/ai/models';
 import { getChatById, getMessagesByChatId } from '@/lib/db/queries';
 import { convertToUIMessages } from '@/lib/utils';
 import { DataStreamHandler } from '@/components/data-stream-handler';
-import {CallBlockProvider} from "@/components/context/call-block-context";
+import { CallBlockProvider } from '@/components/context/call-block-context';
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;

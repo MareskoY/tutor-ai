@@ -382,10 +382,11 @@ export async function saveCallTranscriptions({
 
 export async function getCallTranscriptionsByCallId(callMessageId: string) {
   try {
-    return await db.select()
-        .from(callTranscription)
-        .where(eq(callTranscription.callMessageId, callMessageId))
-        .orderBy(asc(callTranscription.createdAt));
+    return await db
+      .select()
+      .from(callTranscription)
+      .where(eq(callTranscription.callMessageId, callMessageId))
+      .orderBy(asc(callTranscription.createdAt));
   } catch (error) {
     console.error('Failed to get call transcriptions from database', error);
     throw error;

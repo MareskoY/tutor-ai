@@ -18,8 +18,7 @@ import { useBlockSelector } from '@/hooks/use-block';
 import type { ChatType } from '@/lib/ai/chat-type';
 import { CallBlock } from '@/components/voice-calls/call-block';
 import useWebRTCAudioSession from '@/hooks/use-webrtc';
-import {useCallBlockContext} from "@/components/context/call-block-context";
-
+import { useCallBlockContext } from '@/components/context/call-block-context';
 
 export function Chat({
   id,
@@ -49,7 +48,7 @@ export function Chat({
     openNewCall,
     openExistingCall,
     closeCall,
-    existingCallTranscriptions
+    existingCallTranscriptions,
   } = useCallBlockContext();
 
   const {
@@ -77,8 +76,14 @@ export function Chat({
     fetcher,
   );
 
-  const { status, isSessionActive, isConnecting, callDuration, conversation, handleStartStopClick } =
-    useWebRTCAudioSession('ash', id, messages, setMessages);
+  const {
+    status,
+    isSessionActive,
+    isConnecting,
+    callDuration,
+    conversation,
+    handleStartStopClick,
+  } = useWebRTCAudioSession('ash', id, messages, setMessages);
 
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
   const isBlockVisible = useBlockSelector((state) => state.isVisible);
@@ -141,18 +146,18 @@ export function Chat({
       />
 
       {isCallBlockOpen && (
-          <CallBlock
-              isSessionActive={callMode === 'new' ? isSessionActive : false}
-              isConnecting={isConnecting}
-              callDuration={callDuration}
-              handleStartStopClick={handleStartStopClick}
-              onClose={closeCall}
-              // Если "new" => conversation (из useWebRTCAudioSession)
-              // Если "existing" => existingCallTranscriptions
-              conversation={
-                callMode === 'new' ? conversation : existingCallTranscriptions
-              }
-          />
+        <CallBlock
+          isSessionActive={callMode === 'new' ? isSessionActive : false}
+          isConnecting={isConnecting}
+          callDuration={callDuration}
+          handleStartStopClick={handleStartStopClick}
+          onClose={closeCall}
+          // Если "new" => conversation (из useWebRTCAudioSession)
+          // Если "existing" => existingCallTranscriptions
+          conversation={
+            callMode === 'new' ? conversation : existingCallTranscriptions
+          }
+        />
       )}
     </>
   );

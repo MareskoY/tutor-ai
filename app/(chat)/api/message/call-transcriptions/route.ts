@@ -1,8 +1,9 @@
 // app/(chat)/api/message/call-transcriptions/route.ts
 import { NextResponse } from 'next/server';
-import {getCallTranscriptionsByCallId, saveCallTranscriptions} from '@/lib/db/queries';
-
-
+import {
+  getCallTranscriptionsByCallId,
+  saveCallTranscriptions,
+} from '@/lib/db/queries';
 
 export async function GET(request: Request) {
   try {
@@ -11,7 +12,10 @@ export async function GET(request: Request) {
     const callMessageId = searchParams.get('callMessageId');
 
     if (!callMessageId) {
-      return NextResponse.json({ error: 'Missing callMessageId' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Missing callMessageId' },
+        { status: 400 },
+      );
     }
 
     // Загружаем транскрипции из базы
@@ -20,8 +24,8 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('Error in GET /api/message/call-transcriptions', error);
     return NextResponse.json(
-        { error: 'Failed to load call transcriptions' },
-        { status: 500 }
+      { error: 'Failed to load call transcriptions' },
+      { status: 500 },
     );
   }
 }

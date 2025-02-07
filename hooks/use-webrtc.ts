@@ -6,8 +6,8 @@ import { v4 as uuidv4 } from 'uuid';
 import type { Conversation } from '@/lib/ai/realtime/conversations';
 import type { Message } from 'ai';
 import useSound from 'use-sound';
-const ringSound= '/sounds/start_call.mp3';
-const failSound= '/sounds/end_call.mp3';
+const ringSound = '/sounds/start_call.mp3';
+const failSound = '/sounds/end_call.mp3';
 const endSound = '/sounds/end_call.mp3';
 
 type ToolCallback = (...args: any[]) => any;
@@ -17,7 +17,6 @@ export interface Tool {
   description: string;
   parameters?: Record<string, any>;
 }
-
 
 /**
  * The return type for the hook, matching Approach A
@@ -91,7 +90,6 @@ export default function useWebRTCAudioSession(
   const [playFail] = useSound(failSound, { volume: 1.0 });
   const [playEnd] = useSound(endSound, { volume: 1.0 });
 
-
   // Actual messages
   const messagesRef = useRef<Message[]>(messages);
   useEffect(() => {
@@ -110,7 +108,6 @@ export default function useWebRTCAudioSession(
   function registerFunction(name: string, fn: ToolCallback) {
     functionRegistry.current[name] = fn;
   }
-
 
   /**
    * Configure the data channel on open, sending a session update to the server.
@@ -646,11 +643,10 @@ export default function useWebRTCAudioSession(
       await pc.setRemoteDescription({ type: 'answer', sdp: answerSdp });
 
       callStartTimeRef.current = Date.now();
-      setIsSessionActive(true)
+      setIsSessionActive(true);
       setIsConnecting(false);
       stopRing();
       setStatus('Session established successfully!');
-
 
       // crate message in DB
       await createCallMessage();
@@ -659,8 +655,10 @@ export default function useWebRTCAudioSession(
       callUpdateIntervalRef.current = window.setInterval(() => {
         if (callStartTimeRef.current) {
           // Считаем количество секунд
-          const duration = Math.floor((Date.now() - callStartTimeRef.current) / 1000);
-          console.log("duration update:", duration);
+          const duration = Math.floor(
+            (Date.now() - callStartTimeRef.current) / 1000,
+          );
+          console.log('duration update:', duration);
           // Обновляем состояние в React
           setCallDuration(duration);
 
@@ -805,7 +803,7 @@ export default function useWebRTCAudioSession(
   }, []);
 
   useEffect(() => {
-    console.log("callDuration changed:", callDuration);
+    console.log('callDuration changed:', callDuration);
   }, [callDuration]);
 
   return {

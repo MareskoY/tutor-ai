@@ -5,7 +5,7 @@ import { Chat } from '@/components/chat';
 import { DEFAULT_MODEL_NAME, models } from '@/lib/ai/models';
 import { generateUUID } from '@/lib/utils';
 import { DataStreamHandler } from '@/components/data-stream-handler';
-import {CallBlockProvider} from "@/components/context/call-block-context";
+import { CallBlockProvider } from '@/components/context/call-block-context';
 
 export default async function Page() {
   const id = generateUUID();
@@ -20,18 +20,18 @@ export default async function Page() {
 
   return (
     <>
-        <CallBlockProvider>
-          <Chat
-            key={id}
-            id={id}
-            initialMessages={[]}
-            selectedModelId={selectedModelId}
-            selectedVisibilityType="private"
-            isReadonly={false}
-            defaultChatType={defaultChatType}
-          />
-          <DataStreamHandler id={id} />
-        </CallBlockProvider>
+      <CallBlockProvider>
+        <Chat
+          key={id}
+          id={id}
+          initialMessages={[]}
+          selectedModelId={selectedModelId}
+          selectedVisibilityType="private"
+          isReadonly={false}
+          defaultChatType={defaultChatType}
+        />
+        <DataStreamHandler id={id} />
+      </CallBlockProvider>
     </>
   );
 }

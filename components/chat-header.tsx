@@ -11,7 +11,7 @@ import { useSidebar } from './ui/sidebar';
 import { memo } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { type VisibilityType, VisibilitySelector } from './visibility-selector';
-import {useCallBlockContext} from "@/components/context/call-block-context";
+import { useCallBlockContext } from '@/components/context/call-block-context';
 
 function PureChatHeader({
   chatId,
