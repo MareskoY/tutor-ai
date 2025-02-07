@@ -1,3 +1,4 @@
+// components/image-editor.tsx
 import { LoaderIcon } from './icons';
 import cn from 'classnames';
 

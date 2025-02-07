@@ -1,3 +1,4 @@
+// components/block.tsx
 import type {
   Attachment,
   ChatRequestOptions,

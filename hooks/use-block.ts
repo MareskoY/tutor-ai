@@ -1,3 +1,4 @@
+// hooks/use-block.ts
 'use client';
 
 import type { UIBlock } from '@/components/block';

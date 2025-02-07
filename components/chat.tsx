@@ -1,3 +1,4 @@
+// components/chat.tsx
 'use client';
 
 import type { Attachment, Message } from 'ai';
@@ -15,6 +16,9 @@ import { Messages } from './messages';
 import type { VisibilityType } from './visibility-selector';
 import { useBlockSelector } from '@/hooks/use-block';
 import type { ChatType } from '@/lib/ai/chat-type';
+import { CallBlock } from '@/components/voice-calls/call-block';
+import useWebRTCAudioSession from '@/hooks/use-webrtc';
+import { useCallBlockContext } from '@/components/context/call-block-context';
 
 export function Chat({
   id,
@@ -36,6 +40,16 @@ export function Chat({
   const [chatType, setChatType] = useState<ChatType>(
     defaultChatType || 'default',
   );
+
+  const {
+    isOpen: isCallBlockOpen,
+    mode: callMode,
+    activeCallId,
+    openNewCall,
+    openExistingCall,
+    closeCall,
+    existingCallTranscriptions,
+  } = useCallBlockContext();
 
   const {
     messages,
@@ -61,6 +75,15 @@ export function Chat({
     `/api/vote?chatId=${id}`,
     fetcher,
   );
+
+  const {
+    status,
+    isSessionActive,
+    isConnecting,
+    callDuration,
+    conversation,
+    handleStartStopClick,
+  } = useWebRTCAudioSession('ash', id, messages, setMessages);
 
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
   const isBlockVisible = useBlockSelector((state) => state.isVisible);
@@ -121,6 +144,21 @@ export function Chat({
         votes={votes}
         isReadonly={isReadonly}
       />
+
+      {isCallBlockOpen && (
+        <CallBlock
+          isSessionActive={callMode === 'new' ? isSessionActive : false}
+          isConnecting={isConnecting}
+          callDuration={callDuration}
+          handleStartStopClick={handleStartStopClick}
+          onClose={closeCall}
+          // Если "new" => conversation (из useWebRTCAudioSession)
+          // Если "existing" => existingCallTranscriptions
+          conversation={
+            callMode === 'new' ? conversation : existingCallTranscriptions
+          }
+        />
+      )}
     </>
   );
 }

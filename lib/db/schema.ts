@@ -117,3 +117,18 @@ export const suggestion = pgTable(
 );
 
 export type Suggestion = InferSelectModel<typeof suggestion>;
+
+export const callTranscription = pgTable('CallTranscription', {
+  id: uuid('id').primaryKey().notNull().defaultRandom(),
+  chatId: uuid('chatId')
+    .notNull()
+    .references(() => chat.id),
+  callMessageId: uuid('callMessageId')
+    .notNull()
+    .references(() => message.id),
+  role: text('role').notNull(),
+  text: text('text').notNull(),
+  createdAt: timestamp('createdAt').notNull(),
+});
+
+export type CallTranscription = InferSelectModel<typeof callTranscription>;
