@@ -17,7 +17,7 @@ import {
   message as messageTable,
   vote,
   callTranscription,
-  type CallTranscription,
+  type CallTranscription, subscription,
 } from './schema';
 import type { BlockKind } from '@/components/block';
 import type { ChatType } from '@/lib/ai/chat-type';
@@ -47,6 +47,15 @@ export async function createUser(email: string, password: string) {
     return await db.insert(user).values({ email, password: hash });
   } catch (error) {
     console.error('Failed to create user in database');
+    throw error;
+  }
+}
+
+export async function createOAuthUser(email: string) {
+  try {
+    return await db.insert(user).values({ email });
+  } catch (error) {
+    console.error('Failed to create OAuth user in database', error);
     throw error;
   }
 }
@@ -391,4 +400,43 @@ export async function getCallTranscriptionsByCallId(callMessageId: string) {
     console.error('Failed to get call transcriptions from database', error);
     throw error;
   }
+}
+
+export async function createUserSubscription(
+    userId: string,
+    provider: string = 'free',
+    customerId: string = 'free'
+) {
+  await db.insert(subscription).values({
+    userId,
+    provider,
+    customerId,
+    plan: 'free',
+    status: 'active',
+  });
+}
+
+export async function updateUserSubscription(
+    userId: string,
+    subscriptionId: string,
+    plan: 'free' | 'pro',
+    status: 'active' | 'past_due' | 'canceled' | 'incomplete',
+    customerId?: string,
+    provider: string = 'unknown'
+) {
+  await db
+      .update(subscription)
+      .set({
+        subscriptionId,
+        plan,
+        status,
+        provider,
+        ...(customerId ? { customerId } : {}),
+        updatedAt: new Date(),
+      })
+      .where(eq(subscription.userId, userId));
+}
+
+export async function getUserSubscription(userId: string) {
+  return await db.select().from(subscription).where(eq(subscription.userId, userId));
 }

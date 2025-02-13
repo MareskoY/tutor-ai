@@ -1,10 +1,12 @@
+// app/(auth)/auth.ts
 import { compare } from 'bcrypt-ts';
 import NextAuth, { type User, type Session } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
-import { getUser } from '@/lib/db/queries';
+import {createOAuthUser, createUserSubscription, getUser} from '@/lib/db/queries';
 
 import { authConfig } from './auth.config';
+import GoogleProvider from "next-auth/providers/google";
 
 interface ExtendedSession extends Session {
   user: User;
@@ -29,8 +31,34 @@ export const {
         return users[0] as any;
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
   callbacks: {
+    async signIn({ user, account, profile }) {
+      if (account?.provider === 'google') {
+        if (!user.email) {
+          console.error("User email is missing");
+          return false;
+        }
+        const existingUsers = await getUser(user.email);
+        if (existingUsers.length === 0) {
+          await createOAuthUser(user.email);
+          const [newUser] = await getUser(user.email);
+          if (newUser) {
+            await createUserSubscription(newUser.id, 'free', 'free');
+          }
+          if (newUser) {
+            user.id = newUser.id;
+          }
+        } else {
+          user.id = existingUsers[0].id;
+        }
+      }
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;

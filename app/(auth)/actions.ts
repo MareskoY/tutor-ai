@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 
-import { createUser, getUser } from '@/lib/db/queries';
+import {createUser, createUserSubscription, getUser} from '@/lib/db/queries';
 
 import { signIn } from './auth';
 
@@ -67,6 +67,11 @@ export const register = async (
       return { status: 'user_exists' } as RegisterActionState;
     }
     await createUser(validatedData.email, validatedData.password);
+    const [newUser] = await getUser(validatedData.email);
+    if (newUser) {
+      await createUserSubscription(newUser.id, 'free', 'free');
+    }
+
     await signIn('credentials', {
       email: validatedData.email,
       password: validatedData.password,

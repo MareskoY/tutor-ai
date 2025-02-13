@@ -17,12 +17,32 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import Link from "next/link";
+import {ThumbUpIcon} from "@/components/icons";
 
 export function SidebarUserNav({ user }: { user: User }) {
   const { setTheme, theme } = useTheme();
 
   return (
     <SidebarMenu>
+      <SidebarMenuButton asChild className="bg-background h-10">
+        <Link href={`/dashboard?tab=overflow`}>
+          <ThumbUpIcon />
+          <span>Overflow</span>
+        </Link>
+      </SidebarMenuButton>
+      <SidebarMenuButton asChild className="bg-background h-10">
+        <Link href={`/dashboard?tab=settings`}>
+          <ThumbUpIcon />
+          <span>Settings</span>
+        </Link>
+      </SidebarMenuButton>
+      <SidebarMenuButton asChild className="bg-background h-10">
+        <Link href={`/dashboard?tab=payments`}>
+          <ThumbUpIcon />
+          <span>Payments</span>
+        </Link>
+      </SidebarMenuButton>
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
