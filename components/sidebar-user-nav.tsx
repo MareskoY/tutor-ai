@@ -17,8 +17,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import Link from "next/link";
-import {ThumbUpIcon} from "@/components/icons";
+import Link from 'next/link';
+import { ThumbUpIcon } from '@/components/icons';
 
 export function SidebarUserNav({ user }: { user: User }) {
   const { setTheme, theme } = useTheme();

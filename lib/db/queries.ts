@@ -17,7 +17,8 @@ import {
   message as messageTable,
   vote,
   callTranscription,
-  type CallTranscription, subscription,
+  type CallTranscription,
+  subscription,
 } from './schema';
 import type { BlockKind } from '@/components/block';
 import type { ChatType } from '@/lib/ai/chat-type';
@@ -403,9 +404,9 @@ export async function getCallTranscriptionsByCallId(callMessageId: string) {
 }
 
 export async function createUserSubscription(
-    userId: string,
-    provider: string = 'free',
-    customerId: string = 'free'
+  userId: string,
+  provider = 'free',
+  customerId = 'free',
 ) {
   await db.insert(subscription).values({
     userId,
@@ -417,26 +418,31 @@ export async function createUserSubscription(
 }
 
 export async function updateUserSubscription(
-    userId: string,
-    subscriptionId: string,
-    plan: 'free' | 'pro',
-    status: 'active' | 'past_due' | 'canceled' | 'incomplete',
-    customerId?: string,
-    provider: string = 'unknown'
+  userId: string,
+  subscriptionId: string,
+  plan: 'free' | 'pro',
+  status: 'active' | 'past_due' | 'canceled' | 'incomplete',
+  customerId?: string,
+  provider = 'unknown',
+  currentPeriodEnd?: Date,
 ) {
   await db
-      .update(subscription)
-      .set({
-        subscriptionId,
-        plan,
-        status,
-        provider,
-        ...(customerId ? { customerId } : {}),
-        updatedAt: new Date(),
-      })
-      .where(eq(subscription.userId, userId));
+    .update(subscription)
+    .set({
+      subscriptionId,
+      plan,
+      status,
+      provider,
+      ...(customerId ? { customerId } : {}),
+      ...(currentPeriodEnd ? { currentPeriodEnd } : {}),
+      updatedAt: new Date(),
+    })
+    .where(eq(subscription.userId, userId));
 }
 
 export async function getUserSubscription(userId: string) {
-  return await db.select().from(subscription).where(eq(subscription.userId, userId));
+  return await db
+    .select()
+    .from(subscription)
+    .where(eq(subscription.userId, userId));
 }

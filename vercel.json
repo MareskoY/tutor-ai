@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/cron/update-subscriptions.ts": {
+      "schedule": "0 0 * * *"
+    }
+  }
+}

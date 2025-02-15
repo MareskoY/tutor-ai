@@ -3,10 +3,14 @@ import { compare } from 'bcrypt-ts';
 import NextAuth, { type User, type Session } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
-import {createOAuthUser, createUserSubscription, getUser} from '@/lib/db/queries';
+import {
+  createOAuthUser,
+  createUserSubscription,
+  getUser,
+} from '@/lib/db/queries';
 
 import { authConfig } from './auth.config';
-import GoogleProvider from "next-auth/providers/google";
+import GoogleProvider from 'next-auth/providers/google';
 
 interface ExtendedSession extends Session {
   user: User;
@@ -40,7 +44,7 @@ export const {
     async signIn({ user, account, profile }) {
       if (account?.provider === 'google') {
         if (!user.email) {
-          console.error("User email is missing");
+          console.error('User email is missing');
           return false;
         }
         const existingUsers = await getUser(user.email);
