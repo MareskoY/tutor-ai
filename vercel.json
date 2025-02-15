@@ -1,7 +1,8 @@
 {
-  "functions": {
-    "api/cron/update-subscriptions.ts": {
+  "crons": [
+    {
+      "path": "/api/cron/update-subscriptions",
       "schedule": "0 0 * * *"
     }
-  }
+  ]
 }
