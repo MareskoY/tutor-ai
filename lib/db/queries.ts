@@ -2,7 +2,7 @@
 import 'server-only';
 
 import { genSaltSync, hashSync } from 'bcrypt-ts';
-import { and, asc, desc, eq, gt, gte } from 'drizzle-orm';
+import {and, asc, desc, eq, gt, gte, isNotNull, lt} from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
@@ -441,19 +441,20 @@ export async function updateUserSubscription(
 }
 
 export async function getUserSubscription(userId: string) {
-  return await db
-    .select()
-    .from(subscription)
-    .where(eq(subscription.userId, userId));
+  return db
+      .select()
+      .from(subscription)
+      .where(eq(subscription.userId, userId));
 }
 
 export async function getCanceledProSubscriptionsPastCurrentPeriod(now: Date) {
-  return await db.select().from(subscription).where(
+  return db.select().from(subscription).where(
       and(
-          subscription.plan.eq('pro'),
-          subscription.status.eq('canceled'),
+          eq(subscription.plan, 'pro'),
+          eq(subscription.status, 'canceled'),
           isNotNull(subscription.currentPeriodEnd),
-          subscription.currentPeriodEnd.lt(now)
+          lt(subscription.currentPeriodEnd, now)
       )
   );
 }
+
