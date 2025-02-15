@@ -1,3 +1,4 @@
+// app/(auth)/auth.config.ts
 import type { NextAuthConfig } from 'next-auth';
 
 export const authConfig = {
@@ -11,6 +12,10 @@ export const authConfig = {
   ],
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
+      if (nextUrl.pathname.startsWith('/api/auth/')) {
+        return true;
+      }
+
       const isLoggedIn = !!auth?.user;
       const isOnChat = nextUrl.pathname.startsWith('/');
       const isOnRegister = nextUrl.pathname.startsWith('/register');

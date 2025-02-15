@@ -2,7 +2,7 @@
 import 'server-only';
 
 import { genSaltSync, hashSync } from 'bcrypt-ts';
-import { and, asc, desc, eq, gt, gte } from 'drizzle-orm';
+import {and, asc, desc, eq, gt, gte, isNotNull, lt} from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
@@ -18,6 +18,7 @@ import {
   vote,
   callTranscription,
   type CallTranscription,
+  subscription,
 } from './schema';
 import type { BlockKind } from '@/components/block';
 import type { ChatType } from '@/lib/ai/chat-type';
@@ -47,6 +48,15 @@ export async function createUser(email: string, password: string) {
     return await db.insert(user).values({ email, password: hash });
   } catch (error) {
     console.error('Failed to create user in database');
+    throw error;
+  }
+}
+
+export async function createOAuthUser(email: string) {
+  try {
+    return await db.insert(user).values({ email });
+  } catch (error) {
+    console.error('Failed to create OAuth user in database', error);
     throw error;
   }
 }
@@ -392,3 +402,59 @@ export async function getCallTranscriptionsByCallId(callMessageId: string) {
     throw error;
   }
 }
+
+export async function createUserSubscription(
+  userId: string,
+  provider = 'free',
+  customerId = 'free',
+) {
+  await db.insert(subscription).values({
+    userId,
+    provider,
+    customerId,
+    plan: 'free',
+    status: 'active',
+  });
+}
+
+export async function updateUserSubscription(
+  userId: string,
+  subscriptionId: string,
+  plan: 'free' | 'pro',
+  status: 'active' | 'past_due' | 'canceled' | 'incomplete',
+  customerId?: string,
+  provider = 'unknown',
+  currentPeriodEnd?: Date,
+) {
+  await db
+    .update(subscription)
+    .set({
+      subscriptionId,
+      plan,
+      status,
+      provider,
+      ...(customerId ? { customerId } : {}),
+      ...(currentPeriodEnd ? { currentPeriodEnd } : {}),
+      updatedAt: new Date(),
+    })
+    .where(eq(subscription.userId, userId));
+}
+
+export async function getUserSubscription(userId: string) {
+  return db
+      .select()
+      .from(subscription)
+      .where(eq(subscription.userId, userId));
+}
+
+export async function getCanceledProSubscriptionsPastCurrentPeriod(now: Date) {
+  return db.select().from(subscription).where(
+      and(
+          eq(subscription.plan, 'pro'),
+          eq(subscription.status, 'canceled'),
+          isNotNull(subscription.currentPeriodEnd),
+          lt(subscription.currentPeriodEnd, now)
+      )
+  );
+}
+

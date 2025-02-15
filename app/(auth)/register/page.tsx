@@ -9,6 +9,7 @@ import { AuthForm } from '@/components/auth-form';
 import { SubmitButton } from '@/components/submit-button';
 
 import { register, type RegisterActionState } from '../actions';
+import GoogleAuthButton from '@/components/google-auth-button';
 
 export default function Page() {
   const router = useRouter();
@@ -53,6 +54,14 @@ export default function Page() {
         </div>
         <AuthForm action={handleSubmit} defaultEmail={email}>
           <SubmitButton isSuccessful={isSuccessful}>Sign Up</SubmitButton>
+        </AuthForm>
+        <div className="flex-col gap-4 px-4 sm:px-16 -mt-8">
+          <div className="flex items-center">
+            <div className="flex-grow border-t border-gray-600 dark:border-zinc-400" />
+            <span className="mx-4 text-gray-600 dark:text-zinc-400">Or</span>
+            <div className="flex-grow border-t border-gray-600 dark:border-zinc-400" />
+          </div>
+          <GoogleAuthButton title={'Sing up with Google'} />
           <p className="text-center text-sm text-gray-600 mt-4 dark:text-zinc-400">
             {'Already have an account? '}
             <Link
@@ -63,7 +72,7 @@ export default function Page() {
             </Link>
             {' instead.'}
           </p>
-        </AuthForm>
+        </div>
       </div>
     </div>
   );

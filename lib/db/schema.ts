@@ -132,3 +132,26 @@ export const callTranscription = pgTable('CallTranscription', {
 });
 
 export type CallTranscription = InferSelectModel<typeof callTranscription>;
+
+export const subscription = pgTable('Subscription', {
+  id: uuid('id').primaryKey().notNull().defaultRandom(),
+  userId: uuid('userId')
+    .notNull()
+    .references(() => user.id),
+  provider: varchar('provider', { length: 64 }).notNull(), // 'stripe', 'robokassa', 'free' и т.п.
+  customerId: varchar('customerId', { length: 255 }).notNull(), // идентификатор клиента в системе провайдера
+  subscriptionId: varchar('subscriptionId', { length: 255 }), // идентификатор подписки в системе провайдера
+  plan: varchar('plan', { enum: ['free', 'pro'] })
+    .notNull()
+    .default('free'),
+  status: varchar('status', {
+    enum: ['active', 'past_due', 'canceled', 'incomplete'],
+  })
+    .notNull()
+    .default('active'),
+  currentPeriodEnd: timestamp('currentPeriodEnd'),
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+});
+
+export type Subscription = InferSelectModel<typeof subscription>;
