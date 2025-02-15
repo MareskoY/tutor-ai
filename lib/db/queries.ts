@@ -446,3 +446,14 @@ export async function getUserSubscription(userId: string) {
     .from(subscription)
     .where(eq(subscription.userId, userId));
 }
+
+export async function getCanceledProSubscriptionsPastCurrentPeriod(now: Date) {
+  return await db.select().from(subscription).where(
+      and(
+          subscription.plan.eq('pro'),
+          subscription.status.eq('canceled'),
+          isNotNull(subscription.currentPeriodEnd),
+          subscription.currentPeriodEnd.lt(now)
+      )
+  );
+}
