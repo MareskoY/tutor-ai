@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { Conversation } from '@/lib/ai/realtime/conversations';
 import type { Message } from 'ai';
 import useSound from 'use-sound';
-import { ChatType } from '@/lib/ai/chat-type';
+import type { ChatType } from '@/lib/ai/chat-type';
 const ringSound = '/sounds/start_call.mp3';
 const failSound = '/sounds/end_call.mp3';
 const endSound = '/sounds/end_call.mp3';

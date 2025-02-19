@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { CHAT_TYPES, chatTypeConfig, ChatType } from '@/lib/ai/chat-type';
+import { CHAT_TYPES, chatTypeConfig, type ChatType } from '@/lib/ai/chat-type';
 import { useUserPreference } from '@/components/context/user-preference-context';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 

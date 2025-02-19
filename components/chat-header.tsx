@@ -1,7 +1,5 @@
 // components/chat-header.tsx
 'use client';
-
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useWindowSize } from 'usehooks-ts';
 import { SidebarToggle } from '@/components/sidebar-toggle';
@@ -10,7 +8,7 @@ import { PhoneIcon, PlusIcon } from './icons';
 import { useSidebar } from './ui/sidebar';
 import { memo } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
-import { type VisibilityType } from './visibility-selector';
+import type { VisibilityType } from './visibility-selector';
 import { useCallBlockContext } from '@/components/context/call-block-context';
 import { ShareDialogButton } from '@/components/share-dialog-button';
 

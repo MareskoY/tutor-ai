@@ -7,7 +7,7 @@ export default function SettingsComponent() {
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
       <StudentSettings />
-      <div className={'h-12'}></div>
+      <div className={'h-12'} />
       <ChatSettings />
     </div>
   );

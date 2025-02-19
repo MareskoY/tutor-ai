@@ -12,8 +12,6 @@ import { customModel } from '@/lib/ai';
 import { models } from '@/lib/ai/models';
 import {
   buildStudentChatTutorPrompt,
-  buildSystemPrompt,
-  systemPrompt,
 } from '@/lib/ai/prompts';
 import {
   deleteChatById,
@@ -34,7 +32,7 @@ import { updateDocument } from '@/lib/ai/tools/update-document';
 import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
 import { getWeather } from '@/lib/ai/tools/get-weather';
 import type { ChatType } from '@/lib/ai/chat-type';
-import { StudentPreference } from '@/components/context/user-preference-context';
+import type { StudentPreference } from '@/components/context/user-preference-context';
 
 export const maxDuration = 60;
 

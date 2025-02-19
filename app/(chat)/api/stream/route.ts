@@ -2,9 +2,9 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/app/(auth)/auth';
 import { getUserById } from '@/lib/db/queries';
-import { StudentPreference } from '@/components/context/user-preference-context';
+import type { StudentPreference } from '@/components/context/user-preference-context';
 import { buildStudentCallTutorPrompt } from '@/lib/ai/prompts';
-import { ChatType } from '@/lib/ai/chat-type';
+import type { ChatType } from '@/lib/ai/chat-type';
 
 function getSilenceDuration(age: number): number {
   if (age >= 3 && age <= 5) return 3000; // 3-5 лет → 3 секунды

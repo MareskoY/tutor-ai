@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { updateUserSubscription } from '@/lib/db/queries';
-import { getCanceledProSubscriptionsPastCurrentPeriod } from '@/lib/db/queries';
+import { updateUserSubscription, getCanceledProSubscriptionsPastCurrentPeriod  } from '@/lib/db/queries';
 
 export default async function handler(
   req: NextApiRequest,

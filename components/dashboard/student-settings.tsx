@@ -118,102 +118,115 @@ export function StudentSettings() {
   }
 
   return (
-    <Card className="border border-gray-200 rounded-2xl">
-      <CardHeader>
-        <CardTitle>Student Settings</CardTitle>
-        <CardDescription>
-          Provide basic information about the student
-        </CardDescription>
-      </CardHeader>
+      <Card className="border border-gray-200 rounded-2xl">
+        <CardHeader>
+          <CardTitle>Student Settings</CardTitle>
+          <CardDescription>
+            Provide basic information about the student
+          </CardDescription>
+        </CardHeader>
 
-      <CardContent>
-        <div className="grid gap-6 sm:grid-cols-2">
-          {/* Left column */}
-          <div className="space-y-4">
-            <div className="flex flex-col">
-              <label className="text-sm font-semibold">Name</label>
-              <Input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
+        <CardContent>
+          <div className="grid gap-6 sm:grid-cols-2">
+            {/* Left column */}
+            <div className="space-y-4">
+              <div className="flex flex-col">
+                <label htmlFor="name" className="text-sm font-semibold">
+                  Name
+                </label>
+                <Input
+                    id="name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+
+              {/* Language - Select */}
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold">Language</span>
+                <Select
+                    value={language}
+                    onValueChange={(value) => setLanguage(value as LanguageKey)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select language" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.keys(LANGUAGES).map((lang) => (
+                        <SelectItem key={lang} value={lang}>
+                          {lang}
+                        </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="grade" className="text-sm font-semibold">
+                  Class / Grade
+                </label>
+                <Input
+                    id="grade"
+                    type="text"
+                    value={grade}
+                    onChange={(e) => setGrade(e.target.value)}
+                />
+              </div>
             </div>
 
-            {/* Language - Select */}
-            <div className="flex flex-col">
-              <label className="text-sm font-semibold">Language</label>
-              <Select
-                value={language}
-                onValueChange={(value) => setLanguage(value as LanguageKey)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select language" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.keys(LANGUAGES).map((lang) => (
-                    <SelectItem key={lang} value={lang}>
-                      {lang}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {/* Right column */}
+            <div className="space-y-4">
+              <div className="flex flex-col">
+                <label htmlFor="age" className="text-sm font-semibold">
+                  Age
+                </label>
+                <Input
+                    id="age"
+                    type="number"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                />
+              </div>
 
-            <div className="flex flex-col">
-              <label className="text-sm font-semibold">Class / Grade</label>
-              <Input
-                type="text"
-                value={grade}
-                onChange={(e) => setGrade(e.target.value)}
-              />
+
+              {/* Country - Select */}
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold">Country</span>
+                <Select value={country} onValueChange={setCountry}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select country" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableCountries.map((c) => (
+                        <SelectItem key={c} value={c}>
+                          {c}
+                        </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="program-type" className="text-sm font-semibold">
+                  Program Type
+                </label>
+                <Input
+                    id="program-type"
+                    type="text"
+                    value={programType}
+                    onChange={(e) => setProgramType(e.target.value)}
+                />
+              </div>
             </div>
           </div>
+        </CardContent>
 
-          {/* Right column */}
-          <div className="space-y-4">
-            <div className="flex flex-col">
-              <label className="text-sm font-semibold">Age</label>
-              <Input
-                type="number"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-              />
-            </div>
-
-            {/* Country - Select */}
-            <div className="flex flex-col">
-              <label className="text-sm font-semibold">Country</label>
-              <Select value={country} onValueChange={setCountry}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select country" />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableCountries.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {c}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex flex-col">
-              <label className="text-sm font-semibold">Program Type</label>
-              <Input
-                type="text"
-                value={programType}
-                onChange={(e) => setProgramType(e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-      </CardContent>
-
-      <CardFooter className="flex justify-end">
-        <Button onClick={handleSaveAll} disabled={!isDirty}>
-          {saveStatus}
-        </Button>
-      </CardFooter>
-    </Card>
+        <CardFooter className="flex justify-end">
+          <Button onClick={handleSaveAll} disabled={!isDirty}>
+            {saveStatus}
+          </Button>
+        </CardFooter>
+      </Card>
   );
 }
