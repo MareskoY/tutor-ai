@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { Conversation } from '@/lib/ai/realtime/conversations';
 import type { Message } from 'ai';
 import useSound from 'use-sound';
+import type { ChatType } from '@/lib/ai/chat-type';
 const ringSound = '/sounds/start_call.mp3';
 const failSound = '/sounds/end_call.mp3';
 const endSound = '/sounds/end_call.mp3';
@@ -36,6 +37,7 @@ interface UseWebRTCAudioSessionReturn {
   currentVolume: number;
   conversation: Conversation[];
   sendTextMessage: (text: string) => void;
+  setVoiceValue: (voice: string) => void;
 }
 
 /**
@@ -46,12 +48,14 @@ export default function useWebRTCAudioSession(
   chatId: string,
   messages: Message[],
   setMessages: (msgs: Message[]) => void,
+  chatType: ChatType = 'default',
   tools?: Tool[],
 ): UseWebRTCAudioSessionReturn {
   // Connection/session states
   const [status, setStatus] = useState('');
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [voiceValue, setVoiceValue] = useState(voice);
 
   // Audio references for local mic
   // Approach A: explicitly typed as HTMLDivElement | null
@@ -257,13 +261,15 @@ export default function useWebRTCAudioSession(
          */
         case 'conversation.item.input_audio_transcription.completed': {
           console.log('Final user transcription:', msg.transcript);
-          updateEphemeralUserMessage({
-            text: msg.transcript || '',
-            isFinal: true,
-            status: 'final',
-            saved: false,
-          });
-          clearEphemeralUserMessage();
+          setTimeout(() => {
+            updateEphemeralUserMessage({
+              text: msg.transcript || '',
+              isFinal: true,
+              status: 'final',
+              saved: false,
+            });
+            clearEphemeralUserMessage();
+          }, 400);
           break;
         }
 
@@ -361,6 +367,11 @@ export default function useWebRTCAudioSession(
       const response = await fetch('/api/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chatId,
+          chatType,
+          voiceValue,
+        }),
       });
       if (!response.ok) {
         throw new Error(`Failed to get ephemeral token: ${response.status}`);
@@ -820,5 +831,6 @@ export default function useWebRTCAudioSession(
     currentVolume,
     conversation,
     sendTextMessage,
+    setVoiceValue,
   };
 }

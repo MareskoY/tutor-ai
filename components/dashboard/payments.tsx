@@ -102,7 +102,7 @@ export default function PaymentsComponent() {
 
   return (
     <div className={'content-center w-full flex justify-center'}>
-      <div className="mt-24 container space-y-12 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 max-w-4xl ">
+      <div className="container space-y-12 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 max-w-4xl ">
         {/* Карточка Free */}
         <PaymentCard
           title="Free"

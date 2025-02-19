@@ -83,7 +83,7 @@ export function Chat({
     callDuration,
     conversation,
     handleStartStopClick,
-  } = useWebRTCAudioSession('ash', id, messages, setMessages);
+  } = useWebRTCAudioSession('ash', id, messages, setMessages, chatType);
 
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
   const isBlockVisible = useBlockSelector((state) => state.isVisible);

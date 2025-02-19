@@ -1,11 +1,14 @@
-// components/dashboard/settings.tsx
 'use client';
+
+import { StudentSettings } from '@/components/dashboard/student-settings';
+import { ChatSettings } from '@/components/dashboard/chat-settings';
 
 export default function SettingsComponent() {
   return (
-    <div>
-      <h2 className="text-2xl font-semibold">Settings</h2>
-      <p>Настройки вашего аккаунта.</p>
+    <div className="space-y-8 max-w-5xl mx-auto">
+      <StudentSettings />
+      <div className={'h-12'} />
+      <ChatSettings />
     </div>
   );
 }

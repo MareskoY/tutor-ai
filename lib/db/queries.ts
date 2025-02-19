@@ -2,7 +2,7 @@
 import 'server-only';
 
 import { genSaltSync, hashSync } from 'bcrypt-ts';
-import {and, asc, desc, eq, gt, gte, isNotNull, lt} from 'drizzle-orm';
+import { and, asc, desc, eq, gt, gte, isNotNull, lt } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
@@ -40,12 +40,26 @@ export async function getUser(email: string): Promise<Array<User>> {
   }
 }
 
+export async function getUserById({ id }: { id: string }) {
+  try {
+    const [selectedUser] = await db.select().from(user).where(eq(user.id, id));
+    return selectedUser;
+  } catch (error) {
+    console.error('Failed to get user by id from database');
+    throw error;
+  }
+}
+
 export async function createUser(email: string, password: string) {
   const salt = genSaltSync(10);
   const hash = hashSync(password, salt);
-
   try {
-    return await db.insert(user).values({ email, password: hash });
+    return await db.insert(user).values({
+      email,
+      password: hash,
+      studentPreference: null,
+      parentPassword: null,
+    });
   } catch (error) {
     console.error('Failed to create user in database');
     throw error;
@@ -54,9 +68,33 @@ export async function createUser(email: string, password: string) {
 
 export async function createOAuthUser(email: string) {
   try {
-    return await db.insert(user).values({ email });
+    return await db.insert(user).values({
+      email,
+      studentPreference: null,
+      parentPassword: null,
+    });
   } catch (error) {
     console.error('Failed to create OAuth user in database', error);
+    throw error;
+  }
+}
+
+export async function updateUser({
+  id,
+  studentPreference,
+  parentPassword,
+}: {
+  id: string;
+  studentPreference?: any;
+  parentPassword?: string;
+}) {
+  try {
+    return await db
+      .update(user)
+      .set({ studentPreference, parentPassword })
+      .where(eq(user.id, id));
+  } catch (error) {
+    console.error('Failed to update user in database', error);
     throw error;
   }
 }
@@ -441,20 +479,19 @@ export async function updateUserSubscription(
 }
 
 export async function getUserSubscription(userId: string) {
-  return db
-      .select()
-      .from(subscription)
-      .where(eq(subscription.userId, userId));
+  return db.select().from(subscription).where(eq(subscription.userId, userId));
 }
 
 export async function getCanceledProSubscriptionsPastCurrentPeriod(now: Date) {
-  return db.select().from(subscription).where(
+  return db
+    .select()
+    .from(subscription)
+    .where(
       and(
-          eq(subscription.plan, 'pro'),
-          eq(subscription.status, 'canceled'),
-          isNotNull(subscription.currentPeriodEnd),
-          lt(subscription.currentPeriodEnd, now)
-      )
-  );
+        eq(subscription.plan, 'pro'),
+        eq(subscription.status, 'canceled'),
+        isNotNull(subscription.currentPeriodEnd),
+        lt(subscription.currentPeriodEnd, now),
+      ),
+    );
 }
-

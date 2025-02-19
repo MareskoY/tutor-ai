@@ -31,23 +31,25 @@ export const chatTypeConfig: Record<
   ChatType,
   {
     iconKey: string;
-    prompt: string;
+    prompt: string; // The core domain focus
     title: string;
-    label?: string; // Добавили label
+    label?: string;
     initialMessage?: string;
   }
 > = {
   default: {
     iconKey: 'more',
     title: 'Default Chat',
-    prompt: 'You are a helpful AI assistant ready to discuss any topic.',
+    // Now focusing on the domain only
+    prompt:
+      'You are a general tutor ready to discuss any subject with the student.',
     initialMessage: 'Hello there! How can I help you today?',
   },
   math: {
     iconKey: 'math',
     title: 'Math Tutor',
     prompt:
-      'You are an expert math tutor. Provide detailed solutions for math problems.',
+      'You are a math tutor. Provide clear step-by-step math explanations.',
     label: 'Focus on mathematics',
     initialMessage: 'Hi, can you help me with a math question?',
   },
@@ -71,7 +73,7 @@ export const chatTypeConfig: Record<
     iconKey: 'history',
     title: 'History Tutor',
     prompt:
-      'You are a history tutor. Discuss historical events, timelines, and context.',
+      'You are a history tutor. Discuss historical events and invite deeper exploration.',
     label: 'Dive into historical timelines',
     initialMessage: 'Can you tell me about a historical event?',
   },
