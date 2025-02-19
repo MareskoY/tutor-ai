@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useScrollToBottom } from '@/components/use-scroll-to-bottom';
 import { useCallBlockContext } from '@/components/context/call-block-context';
 import { CrossIcon } from '@/components/icons';
+import { formatDuration } from '@/lib/utils';
 
 interface CallBlockProps {
   onClose: () => void;
@@ -81,19 +82,6 @@ export function CallBlock({
   } else if (mode === 'existing') {
     buttonLabel = 'Call Again';
   }
-
-  function formatDuration(seconds: number) {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-
-    // Преобразуем в строку HH:MM:SS (с ведущими нулями при необходимости)
-    const hh = h < 10 ? `0${h}` : `${h}`;
-    const mm = m < 10 ? `0${m}` : `${m}`;
-    const ss = s < 10 ? `0${s}` : `${s}`;
-    return `${hh}:${mm}:${ss}`;
-  }
-  console.log('isConnecting', isConnecting);
 
   return (
     <AnimatePresence>

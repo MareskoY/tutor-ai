@@ -1,3 +1,4 @@
+// app/(chat)/layout.tsx
 import { cookies } from 'next/headers';
 
 import { AppSidebar } from '@/components/app-sidebar';

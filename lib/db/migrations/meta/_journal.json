@@ -64,6 +64,13 @@
       "when": 1739411953393,
       "tag": "0008_add_period_to_subscription_table",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1739852037084,
+      "tag": "0009_add_student_setting_to_user_table",
+      "breakpoints": true
     }
   ]
 }

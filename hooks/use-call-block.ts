@@ -8,12 +8,9 @@ interface UseCallBlockReturn {
   isOpen: boolean;
   mode: CallMode;
   activeCallId: string | null;
-
   openNewCall: () => void;
   openExistingCall: (callId: string) => void;
   closeCall: () => void;
-
-  // Массив транскрипций, загруженных для существующего звонка
   existingCallTranscriptions: any[];
 }
 

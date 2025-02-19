@@ -2,14 +2,12 @@
 'use client';
 
 import { Suspense } from 'react';
-import DashboardContent from "@/components/dashboard/dashboard-content";
-
+import DashboardContent from '@/components/dashboard/dashboard-content';
 
 export default function DashboardPage() {
   return (
-      <Suspense fallback={<div>Loading dashboard...</div>}>
-        <DashboardContent />
-      </Suspense>
+    <Suspense fallback={<div>Loading dashboard...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }
-

@@ -10,10 +10,15 @@ import {
 import { auth } from '@/app/(auth)/auth';
 import { customModel } from '@/lib/ai';
 import { models } from '@/lib/ai/models';
-import { buildSystemPrompt, systemPrompt } from '@/lib/ai/prompts';
+import {
+  buildStudentChatTutorPrompt,
+  buildSystemPrompt,
+  systemPrompt,
+} from '@/lib/ai/prompts';
 import {
   deleteChatById,
   getChatById,
+  getUserById,
   saveChat,
   saveMessages,
 } from '@/lib/db/queries';
@@ -29,6 +34,7 @@ import { updateDocument } from '@/lib/ai/tools/update-document';
 import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
 import { getWeather } from '@/lib/ai/tools/get-weather';
 import type { ChatType } from '@/lib/ai/chat-type';
+import { StudentPreference } from '@/components/context/user-preference-context';
 
 export const maxDuration = 60;
 
@@ -101,13 +107,26 @@ export async function POST(request: Request) {
     ],
   });
 
-  let prompt: string;
+  const userRecord = await getUserById({ id: session.user.id });
+  const defaultStudentPref: StudentPreference = {
+    name: '',
+    age: '',
+    language: '',
+    country: '',
+    grade: '',
+    'school-program': '',
+    'chats-preferences': {},
+  };
 
-  if (type) {
-    prompt = buildSystemPrompt(type);
-  } else {
-    prompt = systemPrompt;
-  }
+  const rawStudentPref = userRecord?.studentPreference ?? {};
+
+  // 4) build the final system prompt
+  const studentPref: StudentPreference = {
+    ...defaultStudentPref,
+    ...(rawStudentPref as Partial<StudentPreference>),
+  };
+
+  const prompt = buildStudentChatTutorPrompt(type, studentPref);
 
   return createDataStreamResponse({
     execute: (dataStream) => {

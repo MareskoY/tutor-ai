@@ -15,7 +15,7 @@ import { MessageActions } from './message-actions';
 import { PreviewAttachment } from './preview-attachment';
 import { Weather } from './weather';
 import equal from 'fast-deep-equal';
-import { cn } from '@/lib/utils';
+import { cn, formatDuration } from '@/lib/utils';
 import { Button } from './ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { MessageEditor } from './message-editor';
@@ -58,6 +58,7 @@ const PurePreviewMessage = ({
         return null;
       }
     }
+    console.log('callData', callData);
     return (
       <AnimatePresence>
         <motion.div
@@ -71,11 +72,11 @@ const PurePreviewMessage = ({
             <div
               role="button"
               tabIndex={0}
-              className="bg-blue-100 text-blue-800 p-4 rounded-lg border border-blue-300 cursor-pointer"
+              className="bg-secondary text-secondary-foreground p-4 rounded-lg border border-border cursor-pointer"
               onClick={() => openExistingCall(message.id)}
             >
               <div className="font-bold">Voice Call</div>
-              <div>Duration: {callData.result.duration} sec</div>
+              <div>{formatDuration(callData.result.duration ?? 0)}</div>
               {callData.result.transcript &&
                 callData.result.transcript.length > 0 && (
                   <div className="mt-2 text-sm text-gray-600">
